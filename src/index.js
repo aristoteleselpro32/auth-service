@@ -3,12 +3,36 @@ const cors = require('cors');
 const routes = require('./routes');
 
 const app = express();
-// CORS configurado por variable de entorno (coma separada)
-const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+
+// Lista predeterminada de orígenes permitidos
+const defaultOrigins = [
+  'https://frontend-veterinaria-ydls-6x7mnxl72-mateos-projects-09c78338.vercel.app',
+  'http://localhost:3000', // Para desarrollo local
+];
+
+// Obtener orígenes de la variable de entorno o usar los predeterminados
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean)
+  .concat(defaultOrigins); // Combinar con los predeterminados
+
 app.use(cors({
-  origin: allowedOrigins.length ? allowedOrigins : true,
-  credentials: true
+  origin: function (origin, callback) {
+    // Permitir solicitudes sin origen (como Postman o cURL)
+    if (!origin) return callback(null, true);
+    // Verificar si el origen está permitido
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    const msg = 'El origen de la solicitud no está permitido por la política CORS';
+    return callback(new Error(msg), false);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
+
 app.use(express.json());
 app.use('/api/auth', routes);
 
