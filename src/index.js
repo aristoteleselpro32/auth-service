@@ -6,7 +6,7 @@ const app = express();
 
 // Lista predeterminada de orígenes permitidos
 const defaultOrigins = [
-  'https://frontend-veterinaria-ydls-6x7mnxl72-mateos-projects-09c78338.vercel.app',
+  '   ',
   'http://localhost:3000', // Para desarrollo local
 ];
 
