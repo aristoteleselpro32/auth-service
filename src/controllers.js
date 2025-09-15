@@ -64,7 +64,8 @@ async function loginUser(req, res) {
     id: data.id,             
     nombre: data.nombre,
     imagen: data.imagen,
-    rol: data.rol
+    rol: data.rol,
+    telefono: data.telefono
   }
 })
 
